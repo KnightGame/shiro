@@ -75,7 +75,7 @@ function initAudio() {
     wrongSound = new Audio('bgm/salah.mp3');
     wrongSound.volume = sfxVolume * 0.8;
 
-    streakSound = new Audio('bgm/strike.mp3');
+    streakSound = new Audio('bgm/streak.mp3');
     streakSound.volume = sfxVolume;
 }
 
@@ -381,7 +381,7 @@ function showGameOver() {
 }
 
 function restartGame() {
-    playSound(clickSound);
+    playSound(clicksound);
     
     const gameOverModal = document.getElementById('gameOverModal');
     gameOverModal.classList.add('hidden');
