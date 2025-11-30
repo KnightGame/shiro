@@ -46,14 +46,26 @@ let bgmVolume = 0.3;
 let sfxVolume = 0.6;
 
 // Audio Elements
-let bgm, clickSound, correctSound, wrongSound, streakSound;
+let bgm, lobbyMusic, gameOverMusic, clickSound, correctSound, wrongSound, streakSound;
 
 // Initialize Audio
 function initAudio() {
+    // Background music untuk gameplay
     bgm = new Audio('bgm/backsound.mp3');
     bgm.loop = true;
     bgm.volume = bgmVolume;
 
+    // Lobby music
+    lobbyMusic = new Audio('bgm/lobby.mp3');
+    lobbyMusic.loop = true;
+    lobbyMusic.volume = bgmVolume;
+
+    // Game over music
+    gameOverMusic = new Audio('bgm/kalah.mp3');
+    gameOverMusic.loop = false;
+    gameOverMusic.volume = bgmVolume;
+
+    // Sound effects
     clickSound = new Audio('bgm/click.mp3');
     clickSound.volume = sfxVolume * 0.8;
 
@@ -63,7 +75,7 @@ function initAudio() {
     wrongSound = new Audio('bgm/salah.mp3');
     wrongSound.volume = sfxVolume * 0.8;
 
-    streakSound = new Audio('bgm/streak.mp3');
+    streakSound = new Audio('bgm/strike.mp3');
     streakSound.volume = sfxVolume;
 }
 
@@ -77,8 +89,15 @@ function playSound(sound) {
 function toggleMute() {
     isMuted = !isMuted;
     document.getElementById('muteBtn').textContent = isMuted ? '🔇' : '🔊';
-    if (bgm) {
-        bgm.volume = isMuted ? 0 : bgmVolume;
+    
+    if (isMuted) {
+        if (bgm) bgm.volume = 0;
+        if (lobbyMusic) lobbyMusic.volume = 0;
+        if (gameOverMusic) gameOverMusic.volume = 0;
+    } else {
+        if (bgm) bgm.volume = bgmVolume;
+        if (lobbyMusic) lobbyMusic.volume = bgmVolume;
+        if (gameOverMusic) gameOverMusic.volume = bgmVolume;
     }
 }
 
@@ -88,6 +107,12 @@ function startGame() {
     // Initialize audio jika belum diinisialisasi
     if (!bgm) {
         initAudio();
+    }
+    
+    // Stop lobby music
+    if (lobbyMusic) {
+        lobbyMusic.pause();
+        lobbyMusic.currentTime = 0;
     }
     
     // Sembunyikan semua screen
@@ -113,7 +138,7 @@ function startGame() {
     // Generate pertanyaan pertama
     generateQuestion();
     
-    // Play background music
+    // Play background music (gameplay)
     if (bgm && !isMuted) {
         bgm.currentTime = 0;
         bgm.play().catch(e => console.log('BGM play failed:', e));
@@ -245,9 +270,14 @@ function nextQuestion() {
 function resetGame() {
     playSound(clickSound);
     
+    // Stop semua musik
     if (bgm) {
         bgm.pause();
         bgm.currentTime = 0;
+    }
+    if (gameOverMusic) {
+        gameOverMusic.pause();
+        gameOverMusic.currentTime = 0;
     }
     
     document.getElementById('gameScreen').classList.add('hidden');
@@ -261,6 +291,12 @@ function resetGame() {
     lives = 3;
     showingAnswer = false;
     isGameActive = false;
+    
+    // Play lobby music
+    if (lobbyMusic && !isMuted) {
+        lobbyMusic.currentTime = 0;
+        lobbyMusic.play().catch(e => console.log('Lobby music play failed:', e));
+    }
 }
 
 function updateStats() {
@@ -296,8 +332,10 @@ function backToMenu() {
 function adjustBGMVolume(value) {
     bgmVolume = value / 100;
     document.getElementById('bgmVolumeValue').textContent = value + '%';
-    if (bgm && !isMuted) {
-        bgm.volume = bgmVolume;
+    if (!isMuted) {
+        if (bgm) bgm.volume = bgmVolume;
+        if (lobbyMusic) lobbyMusic.volume = bgmVolume;
+        if (gameOverMusic) gameOverMusic.volume = bgmVolume;
     }
 }
 
@@ -312,9 +350,10 @@ function adjustSFXVolume(value) {
 }
 
 function showGameOver() {
-    // Hentikan background music
+    // Hentikan background music gameplay
     if (bgm) {
         bgm.pause();
+        bgm.currentTime = 0;
     }
     
     isGameActive = false;
@@ -332,6 +371,12 @@ function showGameOver() {
     gameOverModal.classList.remove('hidden');
     gameOverModal.style.display = 'flex';
     
+    // Play game over music
+    if (gameOverMusic && !isMuted) {
+        gameOverMusic.currentTime = 0;
+        gameOverMusic.play().catch(e => console.log('Game Over music play failed:', e));
+    }
+    
     console.log('Game Over Modal Shown'); // Debug log
 }
 
@@ -341,6 +386,12 @@ function restartGame() {
     const gameOverModal = document.getElementById('gameOverModal');
     gameOverModal.classList.add('hidden');
     gameOverModal.style.display = 'none';
+    
+    // Stop game over music
+    if (gameOverMusic) {
+        gameOverMusic.pause();
+        gameOverMusic.currentTime = 0;
+    }
     
     // Reset game state
     score = 0;
@@ -353,6 +404,7 @@ function restartGame() {
     updateStats();
     generateQuestion();
     
+    // Play gameplay music
     if (bgm && !isMuted) {
         bgm.currentTime = 0;
         bgm.play().catch(e => console.log('BGM play failed:', e));
@@ -362,9 +414,14 @@ function restartGame() {
 function backToMenuFromGame() {
     playSound(clickSound);
     
+    // Stop semua musik
     if (bgm) {
         bgm.pause();
         bgm.currentTime = 0;
+    }
+    if (gameOverMusic) {
+        gameOverMusic.pause();
+        gameOverMusic.currentTime = 0;
     }
     
     const gameOverModal = document.getElementById('gameOverModal');
@@ -382,10 +439,19 @@ function backToMenuFromGame() {
     lives = 3;
     showingAnswer = false;
     isGameActive = false;
+    
+    // Play lobby music
+    if (lobbyMusic && !isMuted) {
+        lobbyMusic.currentTime = 0;
+        lobbyMusic.play().catch(e => console.log('Lobby music play failed:', e));
+    }
 }
 
 // Event Listeners
 window.addEventListener('DOMContentLoaded', function() {
+    // Initialize audio
+    initAudio();
+    
     // Pastikan semua screen tersembunyi kecuali welcome screen
     const gameOverModal = document.getElementById('gameOverModal');
     const gameScreen = document.getElementById('gameScreen');
@@ -401,6 +467,18 @@ window.addEventListener('DOMContentLoaded', function() {
     if (settingsScreen) settingsScreen.classList.add('hidden');
     if (aboutScreen) aboutScreen.classList.add('hidden');
     if (welcomeScreen) welcomeScreen.classList.remove('hidden');
+    
+    // Play lobby music saat halaman load
+    if (lobbyMusic && !isMuted) {
+        lobbyMusic.play().catch(e => {
+            console.log('Lobby music play failed:', e);
+            // Jika autoplay diblok, coba play saat user interact
+            document.body.addEventListener('click', function playOnFirstClick() {
+                lobbyMusic.play().catch(err => console.log('Still failed:', err));
+                document.body.removeEventListener('click', playOnFirstClick);
+            }, { once: true });
+        });
+    }
     
     // Button event listeners
     const muteBtn = document.getElementById('muteBtn');
