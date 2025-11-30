@@ -4,347 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tebak Bendera Negara - Game Edukasi</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            width: 100%;
-        }
-
-        .welcome-screen, .game-screen {
-            background: white;
-            border-radius: 30px;
-            padding: 50px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            text-align: center;
-        }
-
-        .welcome-screen h1 {
-            font-size: 3.5rem;
-            color: #667eea;
-            margin-bottom: 20px;
-        }
-
-        .welcome-screen p {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 40px;
-        }
-
-        .credits {
-            text-align: justify;
-            text-align-last: center;
-            margin-top: 15px;
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-
-        .instructions {
-            background: #f0f4ff;
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 40px;
-            text-align: left;
-        }
-
-        .instructions h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-        }
-
-        .instructions ul {
-            list-style: none;
-            color: #555;
-        }
-
-        .instructions li {
-            padding: 10px 0;
-            font-size: 1.1rem;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 20px 50px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .stat-label {
-            color: #999;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-
-        .game-card {
-            background: white;
-            border-radius: 30px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-
-        .question-title {
-            font-size: 2rem;
-            color: #333;
-            margin-bottom: 30px;
-        }
-
-        .flag-display {
-            margin: 30px 0;
-        }
-
-        .flag-image {
-            width: 400px;
-            height: 280px;
-            object-fit: cover;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            border: 5px solid #f0f0f0;
-            transition: transform 0.3s;
-        }
-
-        .flag-image:hover {
-            transform: scale(1.05);
-        }
-
-        .region-badge {
-            display: inline-block;
-            background: #f0f4ff;
-            color: #667eea;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            margin-top: 15px;
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 30px 0;
-        }
-
-        .option-btn {
-            padding: 20px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
-            color: #333;
-        }
-
-        .option-btn:hover:not(:disabled) {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .option-btn.correct {
-            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-            color: white;
-            transform: scale(1.05);
-        }
-
-        .option-btn.wrong {
-            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-            color: white;
-        }
-
-        .option-btn.disabled {
-            background: #e5e7eb;
-            color: #9ca3af;
-            cursor: not-allowed;
-        }
-
-        .feedback {
-            padding: 20px;
-            border-radius: 15px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin: 20px 0;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .feedback.correct {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .feedback.wrong {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-        }
-
-        .next-btn {
-            flex: 1;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .next-btn:hover {
-            transform: scale(1.03);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .reset-btn {
-            background: #e5e7eb;
-            color: #374151;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .reset-btn:hover {
-            background: #d1d5db;
-        }
-
-        .mute-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: white;
-            border: none;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            transition: all 0.3s;
-            z-index: 1000;
-        }
-
-        .mute-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        .globe-icon {
-            font-size: 6rem;
-            animation: bounce 2s infinite;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .options-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .flag-image {
-                width: 100%;
-                max-width: 320px;
-                height: auto;
-            }
-            
-            .welcome-screen, .game-screen {
-                padding: 30px 20px;
-            }
-            
-            .credits {
-                text-align: left;
-                text-align-last: left;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <button id="muteBtn" class="mute-btn" onclick="toggleMute()">🔊</button>
+    <button id="muteBtn" class="mute-btn">🔊</button>
     
     <div class="container">
         <!-- Welcome Screen -->
@@ -353,25 +16,11 @@
             <h1>Tebak Bendera Negara</h1>
             <p>Uji pengetahuan Anda tentang bendera negara-negara di dunia!</p>
             
-            <div class="credits">
-                <strong>Di buat oleh:</strong><br>
-                - Ahmad Farid Zulkarnain    (24020063)<br>
-                - Apriliano Hasta Asfirza   (24020070)<br>
-                - Muhammad Rosyid           (24020077)
+            <div class="menu-buttons">
+                <button class="menu-btn" id="startBtn">🎮 Mulai Bermain</button>
+                <button class="menu-btn" id="settingsBtn">⚙️ Pengaturan</button>
+                <button class="menu-btn" id="aboutBtn">ℹ️ Tentang</button>
             </div>
-            
-            <div class="instructions">
-                <h3>Cara Bermain:</h3>
-                <ul>
-                    <li>• Lihat bendera yang ditampilkan</li>
-                    <li>• Pilih nama negara yang tepat dari 4 pilihan</li>
-                    <li>• Dapatkan skor tinggi!</li>
-                    <li>• Tingkatkan streak Anda</li>
-                    <li>🔊 Game dengan musik & efek suara</li>
-                </ul>
-            </div>
-            
-            <button class="btn" onclick="startGame()">Mulai Bermain</button>
         </div>
 
         <!-- Game Screen -->
@@ -392,6 +41,10 @@
                     <div class="stat-value" style="color: #f59e0b;" id="streak">0</div>
                 </div>
                 <div class="stat-card">
+                    <div class="stat-label">❤️ Nyawa</div>
+                    <div class="stat-value lives-display" id="lives">3</div>
+                </div>
+                <div class="stat-card">
                     <div class="stat-label">🏆 Terbaik</div>
                     <div class="stat-value" style="color: #8b5cf6;" id="bestStreak">0</div>
                 </div>
@@ -410,245 +63,80 @@
                 <div id="feedback" class="feedback hidden"></div>
 
                 <div class="action-buttons">
-                    <button id="nextBtn" class="next-btn hidden" onclick="nextQuestion()">
+                    <button id="nextBtn" class="next-btn hidden">
                         Soal Berikutnya →
                     </button>
-                    <button class="reset-btn" onclick="resetGame()">
+                    <button class="reset-btn" id="resetBtn">
                         ↻ Reset
                     </button>
                 </div>
             </div>
         </div>
+
+        <!-- Settings Screen -->
+        <div id="settingsScreen" class="settings-screen hidden">
+            <h2>⚙️ Pengaturan</h2>
+            
+            <div class="volume-control">
+                <label>🎵 Volume Musik: <span id="bgmVolumeValue">30%</span></label>
+                <input type="range" class="volume-slider" id="bgmVolume" min="0" max="100" value="30">
+            </div>
+            
+            <div class="volume-control">
+                <label>🔊 Volume Efek Suara: <span id="sfxVolumeValue">60%</span></label>
+                <input type="range" class="volume-slider" id="sfxVolume" min="0" max="100" value="60">
+            </div>
+            
+            <button class="back-btn" id="backFromSettings">← Kembali</button>
+        </div>
+
+        <!-- About Screen -->
+        <div id="aboutScreen" class="about-screen hidden">
+            <h2>ℹ️ Tentang Game</h2>
+            
+            <div class="instructions">
+                <h3>Cara Bermain:</h3>
+                <ul>
+                    <li>• Lihat bendera yang ditampilkan</li>
+                    <li>• Pilih nama negara yang tepat dari 4 pilihan</li>
+                    <li>• Anda memiliki 3 nyawa ❤️</li>
+                    <li>• Jawaban salah akan mengurangi nyawa</li>
+                    <li>• Game berakhir saat nyawa habis</li>
+                    <li>• Dapatkan skor setinggi-tingginya!</li>
+                </ul>
+            </div>
+            
+            <div class="credits" style="text-align: center; margin-top: 30px;">
+                <h3 style="color: #667eea; margin-bottom: 15px;">Tim Pengembang:</h3>
+                <p><strong>Ahmad Farid Zulkarnain</strong> (24020063)</p>
+                <p><strong>Apriliano Hasta Asfirza</strong> (24020070)</p>
+                <p><strong>Muhammad Rosyid</strong> (24020077)</p>
+            </div>
+            
+            <button class="back-btn" id="backFromAbout">← Kembali</button>
+        </div>
+
+        <!-- Game Over Modal -->
+        <div id="gameOverModal" class="game-over-modal hidden">
+            <div class="game-over-content">
+                <h2>💀 Game Over!</h2>
+                <p style="font-size: 1.3rem; color: #666; margin-bottom: 20px;">Nyawa Anda Habis!</p>
+                
+                <div class="final-stats">
+                    <p><strong>Skor Akhir:</strong> <span id="finalScore" style="color: #667eea; font-size: 2rem;">0</span></p>
+                    <p><strong>Total Soal:</strong> <span id="finalTotal">0</span></p>
+                    <p><strong>Akurasi:</strong> <span id="finalAccuracy">0%</span></p>
+                    <p><strong>🏆 Streak Terbaik:</strong> <span id="finalBestStreak">0</span></p>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button class="btn" id="restartBtn" style="flex: 1;">🔄 Main Lagi</button>
+                    <button class="back-btn" id="backToLobby">🏠 Lobby</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script>
-        // Game Data
-        const countries = [
-            { name: 'Indonesia', flag: 'bendera/id.png', region: 'Asia' },
-            { name: 'Malaysia', flag: 'bendera/my.png', region: 'Asia' },
-            { name: 'Singapura', flag: 'bendera/sg.png', region: 'Asia' },
-            { name: 'Thailand', flag: 'bendera/th.png', region: 'Asia' },
-            { name: 'Filipina', flag: 'bendera/ph.png', region: 'Asia' },
-            { name: 'Vietnam', flag: 'bendera/vn.png', region: 'Asia' },
-            { name: 'Jepang', flag: 'bendera/jp.png', region: 'Asia' },
-            { name: 'Korea Selatan', flag: 'bendera/kr.png', region: 'Asia' },
-            { name: 'China', flag: 'bendera/cn.png', region: 'Asia' },
-            { name: 'India', flag: 'bendera/in.png', region: 'Asia' },
-            { name: 'Amerika Serikat', flag: 'bendera/us.png', region: 'Amerika' },
-            { name: 'Kanada', flag: 'bendera/ca.png', region: 'Amerika' },
-            { name: 'Brazil', flag: 'bendera/br.png', region: 'Amerika' },
-            { name: 'Argentina', flag: 'bendera/ar.png', region: 'Amerika' },
-            { name: 'Meksiko', flag: 'bendera/mx.png', region: 'Amerika' },
-            { name: 'Inggris', flag: 'bendera/gb.png', region: 'Eropa' },
-            { name: 'Prancis', flag: 'bendera/fr.png', region: 'Eropa' },
-            { name: 'Jerman', flag: 'bendera/de.png', region: 'Eropa' },
-            { name: 'Italia', flag: 'bendera/it.png', region: 'Eropa' },
-            { name: 'Spanyol', flag: 'bendera/es.png', region: 'Eropa' },
-            { name: 'Belanda', flag: 'bendera/nl.png', region: 'Eropa' },
-            { name: 'Rusia', flag: 'bendera/ru.png', region: 'Eropa' },
-            { name: 'Turki', flag: 'bendera/tr.png', region: 'Eropa' },
-            { name: 'Mesir', flag: 'bendera/eg.png', region: 'Afrika' },
-            { name: 'Afrika Selatan', flag: 'bendera/za.png', region: 'Afrika' },
-            { name: 'Nigeria', flag: 'bendera/ng.png', region: 'Afrika' },
-            { name: 'Australia', flag: 'bendera/au.png', region: 'Oseania' },
-            { name: 'Selandia Baru', flag: 'bendera/nz.png', region: 'Oseania' },
-            { name: 'Arab Saudi', flag: 'bendera/sa.png', region: 'Asia' },
-            { name: 'Uni Emirat Arab', flag: 'bendera/ae.png', region: 'Asia' }
-        ];
-
-        // Game State
-        let score = 0;
-        let total = 0;
-        let streak = 0;
-        let bestStreak = 0;
-        let currentQuestion = null;
-        let isMuted = false;
-        let showingAnswer = false;
-
-        // Audio Elements
-        let bgm, clickSound, correctSound, wrongSound, streakSound;
-
-        // Initialize Audio
-        function initAudio() {
-            bgm = new Audio('bgm/backsound.mp3');
-            bgm.loop = true;
-            bgm.volume = 0.3;
-
-            clickSound = new Audio('bgm/click.mp3');
-            clickSound.volume = 0.5;
-
-            correctSound = new Audio('bgm/benar.mp3');
-            correctSound.volume = 0.6;
-
-            wrongSound = new Audio('bgm/salah.mp3');
-            wrongSound.volume = 0.5;
-
-            streakSound = new Audio('bgm/strike.mp3');
-            streakSound.volume = 0.7;
-        }
-
-        function playSound(sound) {
-            if (!isMuted && sound) {
-                sound.currentTime = 0;
-                sound.play().catch(e => console.log('Audio play failed'));
-            }
-        }
-
-        function toggleMute() {
-            isMuted = !isMuted;
-            document.getElementById('muteBtn').textContent = isMuted ? '🔇' : '🔊';
-            if (bgm) {
-                bgm.volume = isMuted ? 0 : 0.3;
-            }
-        }
-
-        function startGame() {
-            playSound(clickSound);
-            initAudio();
-            
-            document.getElementById('welcomeScreen').classList.add('hidden');
-            document.getElementById('gameScreen').classList.remove('hidden');
-            
-            score = 0;
-            total = 0;
-            streak = 0;
-            
-            updateStats();
-            generateQuestion();
-            
-            if (bgm && !isMuted) {
-                bgm.play().catch(e => console.log('BGM play failed'));
-            }
-        }
-
-        function generateQuestion() {
-            showingAnswer = false;
-            document.getElementById('feedback').classList.add('hidden');
-            document.getElementById('nextBtn').classList.add('hidden');
-            
-            // Select random correct answer
-            currentQuestion = countries[Math.floor(Math.random() * countries.length)];
-            
-            // Select 3 wrong answers
-            const wrongAnswers = countries
-                .filter(c => c.name !== currentQuestion.name)
-                .sort(() => Math.random() - 0.5)
-                .slice(0, 3);
-            
-            // Combine and shuffle
-            const options = [currentQuestion, ...wrongAnswers]
-                .sort(() => Math.random() - 0.5);
-            
-            // Display question
-            document.getElementById('flagImage').src = currentQuestion.flag;
-            document.getElementById('region').textContent = currentQuestion.region;
-            
-            // Display options
-            const optionsGrid = document.getElementById('optionsGrid');
-            optionsGrid.innerHTML = '';
-            
-            options.forEach(country => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.textContent = country.name;
-                btn.onclick = () => handleAnswer(country);
-                optionsGrid.appendChild(btn);
-            });
-        }
-
-        function handleAnswer(selectedCountry) {
-            if (showingAnswer) return;
-            
-            playSound(clickSound);
-            showingAnswer = true;
-            total++;
-            
-            const buttons = document.querySelectorAll('.option-btn');
-            const feedback = document.getElementById('feedback');
-            
-            if (selectedCountry.name === currentQuestion.name) {
-                // Correct answer
-                score++;
-                streak++;
-                
-                if (streak > bestStreak) {
-                    bestStreak = streak;
-                }
-                
-                buttons.forEach(btn => {
-                    if (btn.textContent === currentQuestion.name) {
-                        btn.classList.add('correct');
-                    } else {
-                        btn.classList.add('disabled');
-                    }
-                    btn.disabled = true;
-                });
-                
-                if (streak >= 3) {
-                    setTimeout(() => playSound(streakSound), 200);
-                    feedback.textContent = `🎉 Benar! Streak ${streak}x! Luar biasa!`;
-                } else {
-                    setTimeout(() => playSound(correctSound), 200);
-                    feedback.textContent = '🎉 Benar! Luar biasa!';
-                }
-                feedback.className = 'feedback correct';
-                
-            } else {
-                // Wrong answer
-                streak = 0;
-                
-                buttons.forEach(btn => {
-                    if (btn.textContent === currentQuestion.name) {
-                        btn.classList.add('correct');
-                    } else if (btn.textContent === selectedCountry.name) {
-                        btn.classList.add('wrong');
-                    } else {
-                        btn.classList.add('disabled');
-                    }
-                    btn.disabled = true;
-                });
-                
-                setTimeout(() => playSound(wrongSound), 200);
-                feedback.textContent = `❌ Salah! Ini adalah bendera ${currentQuestion.name} (${currentQuestion.region})`;
-                feedback.className = 'feedback wrong';
-            }
-            
-            feedback.classList.remove('hidden');
-            document.getElementById('nextBtn').classList.remove('hidden');
-            updateStats();
-        }
-
-        function nextQuestion() {
-            playSound(clickSound);
-            generateQuestion();
-        }
-
-        function resetGame() {
-            playSound(clickSound);
-            
-            if (bgm) {
-                bgm.pause();
-                bgm.currentTime = 0;
-            }
-            
-            document.getElementById('gameScreen').classList.add('hidden');
-            document.getElementById('welcomeScreen').classList.remove('hidden');
-            
-            score = 0;
-            total = 0;
-            streak = 0;
-            bestStreak = 0;
-        }
-
-        function updateStats() {
-            document.getElementById('score').textContent = score;
-            document.getElementById('total').textContent = total;
-            document.getElementById('streak').textContent = streak;
-            document.getElementById('bestStreak').textContent = bestStreak;
-            
-            const accuracy = total > 0 ? Math.round((score / total) * 100) : 0;
-            document.getElementById('accuracy').textContent = accuracy + '%';
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
